@@ -2,6 +2,8 @@
 ![VoxNovelLogo](https://github.com/DrewThomasson/VoxNovel/assets/126999465/34b5b312-aa70-44e4-a35c-f3f5ac1b24de)
 
 **VoxNovel:** GPT-4 powered audiobooks with unique character voices.
+**Only compatable with Ubuntu linux at the moment**
+    -Created Notesbook versions of this to be run in google colab for free if you dont have Ubuntu
 
 ## Overview
 
