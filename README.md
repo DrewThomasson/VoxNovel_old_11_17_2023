@@ -104,6 +104,14 @@ VoxNovel is an innovative program that leverages the capabilities of GPT-4 to an
 
 7. **Enjoy!**:
     - Relish your auto-generated audiobook, with each character uniquely voiced.
+  
+
+   **DEMO**
+   
+
+https://github.com/DrewThomasson/VoxNovel/assets/126999465/530e8781-c77c-4424-89cd-a02df363b0bf
+
+
 
 ## Contributing
 
