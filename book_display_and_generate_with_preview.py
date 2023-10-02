@@ -184,4 +184,3 @@ load_and_display_button = ttk.Button(book_frame, text="Load and Display Book", c
 load_and_display_button.pack(pady=10)
 
 root.mainloop()
-
