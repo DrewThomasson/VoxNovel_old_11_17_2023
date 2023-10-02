@@ -3,7 +3,7 @@
 
 **VoxNovel:** GPT-4 powered audiobooks with unique character voices.
 **Only compatable with Ubuntu linux at the moment**
-    -Created Notesbook versions of this to be run in google colab for free if you dont have Ubuntu
+    -Created Notebook versions of this to be run in google colab for free if you don't have Ubuntu
 
 ## Overview
 
