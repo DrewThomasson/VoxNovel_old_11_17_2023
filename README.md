@@ -85,13 +85,30 @@ VoxNovel is an innovative program that leverages the capabilities of GPT-4 to an
 
 ![image](https://github.com/DrewThomasson/VoxNovel/assets/126999465/5bd87dcc-5957-4aaf-a690-65d159d46c40)
 
+4. **book_display_and_generate_with_preview.py**:
+    - This program provides a GUI interface to display book content and generate voice-over for it.
+    - Books should be in `.csv` format with at least two columns: `Speaker` and `Text`.
+    - Allows users to select a TTS model and map unique speakers in the book to different voice-over characters.
+    - Supports voice preview for selected characters to help users make an informed choice.
+    - Outputs audio files (in `.wav` format) for each row in the book, synthesized using the selected voices.
+    - Features a progress bar to show completion status while processing the CSV to generate voiceovers.
+    - Displays the book content in a color-coded format, with different colors for different speakers. Hovering over the colored sections will display the name of the speaker.
+    - Users can click on any section in the book display to play the corresponding audio.
+
+    **Requirements**:
+    - Your book in `.csv` format with columns `Speaker` and `Text`.
+    - Internet connection to download the TTS models.
+    - Required Python libraries: `csv`, `wave`, `random`, `os`, `subprocess`, `pandas`, `pygame`, `tkinter`, `threading`, `balacoon_tts`, `huggingface_hub`.
+
 
 ![image](https://github.com/DrewThomasson/VoxNovel/assets/126999465/8f7ab11a-6650-44cf-9b22-c2b322a7fa1d)
 
 ![image](https://github.com/DrewThomasson/VoxNovel/assets/126999465/297a62cb-61a5-4f43-9a14-1182db93e87d)
 
 
-6. **book_display_and_combine_gui.py.py**:
+
+
+7. **book_display_and_combine_gui.py.py**:
     - A multifunctional GUI application allowing:
         1. Book display with speaker-based background colors.
         2. Audio previews for book sections.
@@ -107,7 +124,7 @@ VoxNovel is an innovative program that leverages the capabilities of GPT-4 to an
         - Audio files named `audio_INDEX.wav`.
         - Libraries: `pandas`, `torch`, `torchaudio`, `tkinter`, `pygame`.
 
-7. **Enjoy!**:
+8. **Enjoy!**:
     - Relish your auto-generated audiobook, with each character uniquely voiced.
   
 
