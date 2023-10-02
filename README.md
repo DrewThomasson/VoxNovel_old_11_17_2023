@@ -12,7 +12,7 @@ VoxNovel is an innovative program that leverages the capabilities of GPT-4 to an
 ## How to Run VoxNovel
 
 1. **Setup**:
-    - Clone the repository: `git clone <repository_url>`.
+    - Clone the repository: `git clone https://github.com/DrewThomasson/VoxNovel`.
     - Navigate to the directory: `cd VoxNovel`.
     - Install the balacoon package via pip.
     - `pip install -i https://pypi.fury.io/balacoon/ balacoon-tts`
