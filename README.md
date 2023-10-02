@@ -112,6 +112,9 @@ VoxNovel is an innovative program that leverages the capabilities of GPT-4 to an
 https://github.com/DrewThomasson/VoxNovel/assets/126999465/530e8781-c77c-4424-89cd-a02df363b0bf
 
 
+https://github.com/DrewThomasson/VoxNovel/assets/126999465/53b694a9-5ddd-4174-82bc-07aff22d2330
+
+
 
 ## Contributing
 
