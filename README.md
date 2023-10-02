@@ -86,7 +86,12 @@ VoxNovel is an innovative program that leverages the capabilities of GPT-4 to an
 ![image](https://github.com/DrewThomasson/VoxNovel/assets/126999465/5bd87dcc-5957-4aaf-a690-65d159d46c40)
 
 
-6. **book_display_and_generate_with_preview.py**:
+![image](https://github.com/DrewThomasson/VoxNovel/assets/126999465/8f7ab11a-6650-44cf-9b22-c2b322a7fa1d)
+
+![image](https://github.com/DrewThomasson/VoxNovel/assets/126999465/297a62cb-61a5-4f43-9a14-1182db93e87d)
+
+
+6. **book_display_and_combine_gui.py.py**:
     - A multifunctional GUI application allowing:
         1. Book display with speaker-based background colors.
         2. Audio previews for book sections.
