@@ -1,0 +1,5 @@
+numpy
+balacoon-tts @ https://pypi.fury.io/balacoon/
+huggingface_hub
+openai
+
