@@ -19,7 +19,7 @@ VoxNovel is an innovative program that leverages the capabilities of GPT-4 to an
     - `pip install -i https://pypi.fury.io/balacoon/ balacoon-tts`
     - `pip install numpy`
     - `pip install huggingface_hub`
-    - `pip install openai'
+    - `pip install openai`
     - Install the necessary packages: 
 
 2. **Run full VOXNOVEL GUI**:
