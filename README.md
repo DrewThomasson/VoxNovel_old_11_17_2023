@@ -85,7 +85,7 @@ VoxNovel is an innovative program that leverages the capabilities of GPT-4 to an
 
 ![image](https://github.com/DrewThomasson/VoxNovel/assets/126999465/5bd87dcc-5957-4aaf-a690-65d159d46c40)
 
-4. **book_display_and_generate_with_preview.py**:
+6. **book_display_and_generate_with_preview.py**:
     - This program provides a GUI interface to display book content and generate voice-over for it.
     - Books should be in `.csv` format with at least two columns: `Speaker` and `Text`.
     - Allows users to select a TTS model and map unique speakers in the book to different voice-over characters.
