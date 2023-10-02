@@ -4,6 +4,7 @@ import time
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import threading
+import os
 
 def extract_sentence(start, end, filename):
     with open(filename, 'r') as f:
@@ -35,6 +36,18 @@ def ask_openai(context, sentence, names):
         messages=[message, message_user]
     )
     return response.choices[0].message['content'].strip()
+
+def warn_about_costs(txt_file_path):
+    file_size = os.path.getsize(txt_file_path)
+    if file_size > 0: 
+        result = messagebox.askyesno(
+            "Cost Warning", 
+            "Processing large files like an entire book can be costly. For example, processing the entirety of 'Alice in Wonderland' might cost around $10-13, "
+            "though it depends on how many quotes from characters exist in the book. Do you wish to continue?"
+        )
+        if not result:
+            return False
+    return True
 
 def main(api_key, txt_file_path, progress_var, status_label, num_of_wanted_requests, message_label):
     openai.api_key = api_key
@@ -72,6 +85,9 @@ def on_start(api_key_entry, txt_file_entry, progress_var, status_label, manual_v
         return
     if not txt_file_path:
         messagebox.showerror("Error", "Please select the text file.")
+        return
+
+    if not warn_about_costs(txt_file_path):
         return
 
     num_of_wanted_requests = len(pd.read_csv('quotes.csv'))
@@ -127,4 +143,3 @@ def create_gui():
 
 if __name__ == "__main__":
     create_gui()
-
