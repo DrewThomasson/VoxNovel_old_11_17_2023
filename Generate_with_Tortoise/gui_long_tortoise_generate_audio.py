@@ -7,20 +7,21 @@ import pandas as pd
 import random
 import shutil  # for copying files
 import subprocess  # to open the audio file with the default video player
-import nltk
+
 import torch
 import torchaudio
 from tortoise.api import TextToSpeech
 from tortoise.utils.audio import load_audio, load_voice, load_voices
+
+import nltk
+from nltk.tokenize import sent_tokenize
+nltk.download('punkt')
 
 # Load CSV data
 data = pd.read_csv("book.csv")
 
 # Get list of available voice actors
 voice_actors = os.listdir("tortoise/voices/")
-
-# Downloading necessary NLTK data
-nltk.download('punkt')
 
 # Main app
 class App:
@@ -70,33 +71,37 @@ class App:
                 for combo in self.speaker_voice_map.values():
                     combo['values'] = voice_actors
 
-    def split_text(self, text):
-        """Split the text into smaller chunks based on sentences."""
-        return nltk.sent_tokenize(text)
-    
     def generate_audio(self):
         total_rows = len(data)
         tts = TextToSpeech()
-        
+    
         for index, row in data.iterrows():
             speaker = row['Speaker']
             text = row['Text']
+            print(f"text : {text}")
             voice_actor = self.speaker_voice_map[speaker].get()
-            
-            voice_samples, conditioning_latents = load_voice(voice_actor)
-            
-            sentences = self.split_text(text)
-            audio_pieces = []
+        
+            # Split text into sentences
+            sentences = sent_tokenize(text)
+        
+            # List to store audio tensors for each sentence
+            audio_tensors = []
+        
             for sentence in sentences:
+                print(f"sentence : {sentence}")
+                voice_samples, conditioning_latents = load_voice(voice_actor)
                 gen = tts.tts_with_preset(sentence, voice_samples=voice_samples, conditioning_latents=conditioning_latents, preset="ultra_fast")
-                audio_pieces.append(gen.squeeze(0).cpu())
-                
-            concatenated_audio = torch.cat(audio_pieces, dim=0)
-            torchaudio.save(f'audio_{index}.wav', concatenated_audio, 24000)
-            
+                audio_tensors.append(gen.squeeze(0).cpu())
+
+            # Concatenate tensors along time axis and save
+            combined_audio = torch.cat(audio_tensors, dim=1)  # Concatenate along time axis
+            torchaudio.save(f'audio_{index}.wav', combined_audio, 24000)
+
+            # Update progress bar
             progress_percentage = (index + 1) / total_rows * 100
             self.progress['value'] = progress_percentage
             self.root.update_idletasks()
+
 
     def preview_voice(self, speaker):
         voice_actor = self.speaker_voice_map[speaker].get()
@@ -110,4 +115,3 @@ class App:
 root = tk.Tk()
 app = App(root)
 root.mainloop()
-
