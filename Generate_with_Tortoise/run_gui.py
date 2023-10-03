@@ -10,7 +10,7 @@ def main():
         "gui_create_quotes_files.py",
         "speaker_find_attribute.py",
         "create_book_csv.py",
-        "tortoise_book_display_and_generate.py",
+        "gui_long_tortoise_generate_audio.py",
         "book_display_and_combine_gui.py"
     ]
 
