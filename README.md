@@ -131,9 +131,11 @@ VoxNovel is an innovative program that leverages the capabilities of GPT-4 to an
    **DEMO**
    
  **High Quality Tortoise Demos**
+ 
 https://github.com/DrewThomasson/VoxNovel/assets/126999465/c4f8dfdf-c5bd-4771-ab1a-6131c22a67b2
 
  **Super fast audio Balacoon Demos**
+ 
 https://github.com/DrewThomasson/VoxNovel/assets/126999465/530e8781-c77c-4424-89cd-a02df363b0bf
 
 
