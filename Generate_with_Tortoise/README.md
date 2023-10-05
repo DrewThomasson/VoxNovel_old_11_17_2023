@@ -25,3 +25,10 @@ If not report an issue on the VoxNovel Github and I'll try my best to respond.
 **Tortoise generate audio gui**
 
 ![image](https://github.com/DrewThomasson/VoxNovel/assets/126999465/56b766a1-4cc4-414c-a170-ab704e05cdd4)
+
+
+   **DEMO**
+   
+ **High Quality Tortoise Demos**
+ 
+https://github.com/DrewThomasson/VoxNovel/assets/126999465/c4f8dfdf-c5bd-4771-ab1a-6131c22a67b2
