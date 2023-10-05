@@ -30,5 +30,14 @@ If not report an issue on the VoxNovel Github and I'll try my best to respond.
    **DEMO**
    
  **High Quality Tortoise Demos**
+ -generated using gpu in 90 minutes
  
 https://github.com/DrewThomasson/VoxNovel/assets/126999465/c4f8dfdf-c5bd-4771-ab1a-6131c22a67b2
+
+**Also generated this one purly on my cpu**
+-Generated on cpu in two days
+-Changed two voices is the only diffrence other than that they are identicle
+-this shows that there is roughly no difffrence between the output of cpu vs gpu tortoise
+
+https://github.com/DrewThomasson/VoxNovel/assets/126999465/fae6148b-e8fa-4b8a-b09d-b2faadfda8ae
+
