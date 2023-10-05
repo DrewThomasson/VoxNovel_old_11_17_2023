@@ -24,4 +24,4 @@ If not report an issue on the VoxNovel Github and I'll try my best to respond.
 
 **Tortoise generate audio gui**
 
-![image](https://github.com/DrewThomasson/VoxNovel/assets/126999465/8585818d-d0b0-4012-9fea-458929ffc5cb)
+![image](https://github.com/DrewThomasson/VoxNovel/assets/126999465/fef9e9c9-9367-456c-b146-a31d62ee5ab0)
