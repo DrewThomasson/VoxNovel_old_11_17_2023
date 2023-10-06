@@ -9,3 +9,8 @@ Its pretty bad at it, although but if you want to mess with it, here you go
 **gui llama-2 quotation attribution.py**
 
 ![image](https://github.com/DrewThomasson/VoxNovel/assets/126999465/559f8d53-e360-4f83-bcf9-fe751302fe9d)
+
+
+**IMPORTANT**
+-in order to run you need to do
+'pip install -q ctransformers langchain'
