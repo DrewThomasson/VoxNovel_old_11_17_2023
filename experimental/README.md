@@ -13,4 +13,4 @@ Its pretty bad at it, although but if you want to mess with it, here you go
 
 **IMPORTANT**
 -in order to run you need to do
-'pip install -q ctransformers langchain'
+`pip install -q ctransformers langchain`
