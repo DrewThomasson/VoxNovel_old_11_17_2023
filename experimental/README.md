@@ -1,4 +1,4 @@
-This folder is for experimental featurs only:
+This folder is for experimental features only:
 
 At the moment I've only got a local llama-2 instead of gpt-4 being given the speaker attribution task(who says what) in this
 Its pretty bad at it, although but if you want to mess with it, here you go
