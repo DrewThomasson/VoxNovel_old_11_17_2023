@@ -8,7 +8,7 @@ Before you begin, ensure you have installed **BookNLP** on your computer. This i
 
 [BookNLP GitHub Repository](https://github.com/booknlp/booknlp)
 
-## Execution Order
+## Execution Order in terminal
 
 1. `python Gui_bookNLP.py`
-2. `run_gui.py`
+2. `python run_gui.py`
