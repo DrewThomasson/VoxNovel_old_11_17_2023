@@ -1,6 +1,14 @@
-**This does everything locally on your computer for free!!**
+# Local Processing with BookNLP
 
-You need to install booknlp on your computer first though in order to use this
-BookNLP is needed for the speaker quotation attribution in books for this method.
+Run everything locally on your computer without any cost!
 
-https://github.com/booknlp/booknlp
+## Prerequisites
+
+Before you begin, ensure you have installed **BookNLP** on your computer. This is essential for speaker quotation attribution in books with this method.
+
+[BookNLP GitHub Repository](https://github.com/booknlp/booknlp)
+
+## Execution Order
+
+1. `python Gui_bookNLP.py`
+2. `run_gui.py`
