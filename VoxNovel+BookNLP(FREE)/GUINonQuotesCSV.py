@@ -39,7 +39,7 @@ def process_files(quotes_file, tokens_file):
 
 # GUI setup
 root = tk.Tk()
-root.title("Harry Potter Book Processor")
+root.title("Book Processor(Generates nonquotes.csv)")
 root.geometry("400x200")
 
 def open_and_process():
