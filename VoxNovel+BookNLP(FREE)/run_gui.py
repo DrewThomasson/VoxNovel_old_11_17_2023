@@ -1,12 +1,13 @@
 import subprocess
 def run_script(script_name):
     """Execute a Python script and wait for it to finish."""
-    result = subprocess.run(["python", script_name], check=True)
+    result = subprocess.run(["python3", script_name], check=True)
     return result.returncode == 0
 
 def main():
     scripts_to_run = [
         "GUINonQuotesCSV.py",
+        "cleanup_quotesCSV.py",
         "GUIQuotesCSV.py",
         "create_book_csv.py",
         "book_display_and_generate_with_preview.py",
@@ -23,4 +24,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
