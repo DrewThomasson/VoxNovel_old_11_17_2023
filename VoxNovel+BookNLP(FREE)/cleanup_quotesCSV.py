@@ -20,12 +20,18 @@ df = pd.read_csv("quotes.csv")
 # Remove rows where the "Text" column doesn't contain any alphanumeric characters
 df = df[df["Text"].apply(has_alphanumeric)]
 
-# Replace speaker names that match the format "{CharID}:{pronoun}" with "Narrator"
+# Replace speaker names that match the format "{CharID}:{char_name}.{gender_suffix}" where char_name is a pronoun, with "Narrator"
 for index, row in df.iterrows():
     speaker = row['Speaker']
-    if speaker:
-        _, name = speaker.split(":")
-        if is_pronoun(name):
+    if speaker and ":" in speaker:
+        parts = speaker.split(":")
+        char_id = parts[0]
+        char_name_gender = parts[1]
+        
+        # Extract char_name from "char_name.gender_suffix" format
+        char_name = char_name_gender.split(".")[0]
+        
+        if is_pronoun(char_name):
             df.at[index, 'Speaker'] = "Narrator"
 
 # Save the updated DataFrame back to quotes.csv
