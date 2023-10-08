@@ -1,7 +1,7 @@
 import subprocess
 def run_script(script_name):
     """Execute a Python script and wait for it to finish."""
-    result = subprocess.run(["python3", script_name], check=True)
+    result = subprocess.run(["python", script_name], check=True)
     return result.returncode == 0
 
 def main():
