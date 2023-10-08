@@ -7,8 +7,8 @@ def run_script(script_name):
 def main():
     scripts_to_run = [
         "GUINonQuotesCSV.py",
-        "cleanup_quotesCSV.py",
         "GUIQuotesCSV.py",
+        "cleanup_quotesCSV.py",
         "create_book_csv.py",
         "book_display_and_generate_with_preview.py",
         "book_display_and_combine_gui.py"
