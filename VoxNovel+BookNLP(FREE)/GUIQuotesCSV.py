@@ -39,6 +39,20 @@ for index, row in df_entities.iterrows():
         char_names_dict[char_id] = []
     char_names_dict[char_id].append(name)
 
+def identify_gender(names_list):
+    male_pronouns = ['he', 'him', 'his', 'himself']
+    female_pronouns = ['she', 'her', 'hers', 'herself']
+    
+    male_count = sum(1 for name in names_list if name.lower() in male_pronouns)
+    female_count = sum(1 for name in names_list if name.lower() in female_pronouns)
+    
+    if male_count > female_count:
+        return ".M"
+    elif female_count > male_count:
+        return ".F"
+    else:
+        return ".?"
+
 # Function to identify names using NLTK's named entity recognition
 def identify_names(text_list):
     text = ' '.join(text_list)
@@ -59,13 +73,16 @@ def identify_names(text_list):
             names.append(name)
     return names
 
-# Now, select the most common name for each char_id
+gender_dict = {}
 for char_id, names in char_names_dict.items():
     names_identified = identify_names(names)
+    gender_identified = identify_gender(names)
     if names_identified:
         char_names_dict[char_id] = Counter(names_identified).most_common(1)[0][0]
     else:
         char_names_dict[char_id] = Counter(names).most_common(1)[0][0]
+    
+    gender_dict[char_id] = gender_identified
 
 quotes_data = []
 
@@ -84,9 +101,10 @@ for index, row in df_quotes.iterrows():
     words_chunk = words_chunk.replace(" n't", "n't").replace(" n’", "n’")
     words_chunk = re.sub(r' (?=[^a-zA-Z0-9\s])', '', words_chunk)
     
-    # Get character name from char_names_dict
+    # Get character name and gender from char_names_dict and gender_dict
     char_name = char_names_dict.get(char_id, "")
-    speaker_info = f"{char_id}:{char_name}"
+    gender_suffix = gender_dict.get(char_id, ".?")
+    speaker_info = f"{char_id}:{char_name}{gender_suffix}"
     
     # Append data to quotes_data
     quotes_data.append([words_chunk, start_id, end_id, "True", speaker_info])
@@ -96,4 +114,3 @@ quotes_df = pd.DataFrame(quotes_data, columns=["Text", "Start Location", "End Lo
 
 # Write to quotes.csv
 quotes_df.to_csv("quotes.csv", index=False)
-
