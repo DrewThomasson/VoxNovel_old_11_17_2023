@@ -36,3 +36,52 @@ for index, row in df.iterrows():
 
 # Save the updated DataFrame back to quotes.csv
 df.to_csv("quotes.csv", index=False)
+
+import csv
+
+# Step 1: Read the file and load the contents
+with open('quotes.csv', 'r') as csvfile:
+    reader = csv.reader(csvfile)
+    headers = next(reader)
+    
+    # Ensure "Speaker" column exists
+    if "Speaker" not in headers:
+        print("Error: 'Speaker' column not found!")
+        exit()
+
+    # Load all rows
+    rows = [row for row in reader]
+
+# Step 2: Count occurrences of each name
+name_counts = {}
+for row in rows:
+    speaker_index = headers.index("Speaker")
+    name = row[speaker_index]
+    name_counts[name] = name_counts.get(name, 0) + 1
+
+# Step 3 and 4: Replace names with "Narrator" if they appear only once and print message
+for row in rows:
+    speaker_index = headers.index("Speaker")
+    name = row[speaker_index]
+    if name_counts[name] == 1:
+        print(f"{name}: was found with 1 quote: Turning into Narrator line")
+        row[speaker_index] = "Narrator"
+        name_counts["Narrator"] = name_counts.get("Narrator", 0) + 1
+        del name_counts[name]
+
+# Optional: Write changes back to the CSV file
+with open('quotes.csv', 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(headers)
+    for row in rows:
+        writer.writerow(row)
+
+# Sort the counts from most to least
+sorted_counts = sorted(name_counts.items(), key=lambda x: x[1], reverse=True)
+
+
+# Print the updated counts
+print("\nCharacter Quote Counts after Changes:")
+for name, count in sorted_counts:
+    print(f"{name}: {count} times")
+
