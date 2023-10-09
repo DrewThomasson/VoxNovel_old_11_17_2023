@@ -29,7 +29,7 @@ import subprocess
 # Your other imports remain here
 
 data = pd.read_csv("book.csv")
-voice_actors = os.listdir("tortoise/voices/")
+voice_actors = os.listdir("voices/")
 
 class App:
     def __init__(self, root):
@@ -80,13 +80,13 @@ class App:
     def add_new_voice(self):
         folder_name = askstring("New Voice", "Enter name for the new voice:")
         if folder_name:
-            new_folder_path = os.path.join("tortoise/voices/", folder_name)
+            new_folder_path = os.path.join("voices/", folder_name)
             os.mkdir(new_folder_path)
             file_path = filedialog.askopenfilename(filetypes=[("MP3 Files", "*.mp3"), ("WAV Files", "*.wav")])
             if file_path:
                 shutil.copy(file_path, new_folder_path)
                 global voice_actors
-                voice_actors = os.listdir("tortoise/voices/")
+                voice_actors = os.listdir("voices/")
                 for combo in self.speaker_voice_map.values():
                     combo['values'] = voice_actors
 
@@ -137,7 +137,7 @@ class App:
 
     def preview_voice(self, speaker):
         voice_actor = self.speaker_voice_map[speaker].get()
-        voice_folder = os.path.join("tortoise/voices/", voice_actor)
+        voice_folder = os.path.join("voices/", voice_actor)
         audio_samples = [f for f in os.listdir(voice_folder) if f.endswith(('.mp3', '.wav'))]
         if audio_samples:
             sample_path = os.path.join(voice_folder, audio_samples[0])
