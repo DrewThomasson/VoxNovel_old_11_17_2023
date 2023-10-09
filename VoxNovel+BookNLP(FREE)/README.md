@@ -8,6 +8,10 @@ Before you proceed, make sure to install **BookNLP** on your system. It is an es
 
 [BookNLP GitHub Repository](https://github.com/booknlp/booknlp)
 
+If you are going to be using tortoise then you should install the tortoise github into this folder so the longtortoise genreate can its voice folder
+
+git clone https://github.com/152334H/tortoise-tts-fast.git
+
 ## Execution Order in Terminal
 
 1. `python Gui_bookNLP.py`
