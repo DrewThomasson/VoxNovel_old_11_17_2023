@@ -11,6 +11,18 @@ def calibre_installed():
         subprocess.run(['ebook-convert', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return True
     except FileNotFoundError:
+        print("""ERROR NO CALIBRE: running epub2txt convert version...
+It appears you dont have the calibre commandline tools installed on your,
+This will allow you to convert from any ebook file format:
+Calibre supports the following input formats: CBZ, CBR, CBC, CHM, EPUB, FB2, HTML, LIT, LRF, MOBI, ODT, PDF, PRC, PDB, PML, RB, RTF, SNB, TCR, TXT.
+
+If you want this feature please follow online instruction for downloading the calibre commandline tool.
+
+For Linux its: 
+sudo apt update && sudo apt upgrade
+sudo apt install calibre
+
+""")
         return False
 
 def convert_with_calibre(file_path, output_format="txt"):
