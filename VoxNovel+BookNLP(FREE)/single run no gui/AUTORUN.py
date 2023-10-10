@@ -456,6 +456,8 @@ import torchaudio
 from tortoise.api import TextToSpeech
 from tortoise.utils.audio import load_audio, load_voice, load_voices
 
+import time
+
 import nltk
 from nltk.tokenize import sent_tokenize
 nltk.download('punkt')
@@ -503,6 +505,7 @@ def split_long_string(text, limit=250):
     return new_parts
 
 def generate_audio():
+    random.seed(int(time.time()))
     ensure_output_folder()
     total_rows = len(data)
     tts = TextToSpeech()
