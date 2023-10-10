@@ -40,7 +40,7 @@ def process_file():
     booknlp = BookNLP("en", model_params)
     booknlp.process(file_path, output_directory, book_id)
 
-    messagebox.showinfo("Success", "File processed successfully!")
+    print("Success, File processed successfully!")
     
     # Close the GUI
     root.destroy()
@@ -441,6 +441,33 @@ if __name__ == "__main__":
 
 
 
+#this will wipe the computer of any current audio clips from a previous session
+import os
+
+def wipe_folder(directory_path):
+    # Ensure the directory exists
+    if not os.path.exists(directory_path):
+        print(f"The directory {directory_path} does not exist!")
+        return
+
+    # Iterate through files in the directory
+    for filename in os.listdir(directory_path):
+        file_path = os.path.join(directory_path, filename)
+        
+        # Check if it's a regular file (not a subdirectory)
+        if os.path.isfile(file_path):
+            try:
+                os.remove(file_path)
+                print(f"Deleted: {file_path}")
+            except Exception as e:
+                print(f"Failed to delete {file_path}. Reason: {e}")
+
+print("wiping any fast generated audio clips cache")
+folder_path = "Working_files/generated_audio_clips/"
+wipe_folder(folder_path)
+
+
+
 
 
 
@@ -510,7 +537,7 @@ def generate_audio():
     total_rows = len(data)
     tts = TextToSpeech()
 
-    speaker_voice_map = {"Narrator": "train_atkins.F", "Soren.M": "Tom.M"}
+    speaker_voice_map = {}
     print(speaker_voice_map)
     for speaker in data['Speaker'].unique():
         random_voice = get_random_voice_for_speaker(speaker)
