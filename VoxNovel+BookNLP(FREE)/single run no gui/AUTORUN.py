@@ -1,31 +1,48 @@
 import os
+import subprocess
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from epub2txt import epub2txt
 from booknlp.booknlp import BookNLP
 
-def convert_epub_to_txt(file_path):
-    """Convert EPUB to TXT."""
-    content = epub2txt(file_path)
-    cleaned_content = '\n'.join(line for line in content.splitlines() if not line.startswith('@page'))
-    return cleaned_content
+def calibre_installed():
+    """Check if Calibre's ebook-convert tool is available."""
+    try:
+        subprocess.run(['ebook-convert', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        return True
+    except FileNotFoundError:
+        return False
+
+def convert_with_calibre(file_path, output_format="txt"):
+    """Convert a file using Calibre's ebook-convert tool."""
+    output_path = file_path.rsplit('.', 1)[0] + '.' + output_format
+    subprocess.run(['ebook-convert', file_path, output_path])
+    return output_path
 
 def process_file():
-    file_path = filedialog.askopenfilename(title='Select File', filetypes=[('Text and EPUB Files', ('*.txt', '*.epub'))])
+    file_path = filedialog.askopenfilename(
+        title='Select File',
+        filetypes=[('Supported Files', 
+                    ('*.cbz', '*.cbr', '*.cbc', '*.chm', '*.epub', '*.fb2', '*.html', '*.lit', '*.lrf', 
+                     '*.mobi', '*.odt', '*.pdf', '*.prc', '*.pdb', '*.pml', '*.rb', '*.rtf', '*.snb', 
+                     '*.tcr', '*.txt'))]
+    )
+    
     if not file_path:
         return
 
-    if file_path.endswith('.epub'):
-        # Convert EPUB to TXT first
-        content = convert_epub_to_txt(file_path)
-        # Save converted content to Working_files directory
+    if file_path.lower().endswith(('.cbz', '.cbr', '.cbc', '.chm', '.epub', '.fb2', '.html', '.lit', '.lrf', 
+                                  '.mobi', '.odt', '.pdf', '.prc', '.pdb', '.pml', '.rb', '.rtf', '.snb', '.tcr')) and calibre_installed():
+        file_path = convert_with_calibre(file_path)
+    elif file_path.lower().endswith('.epub') and not calibre_installed():
+        content = epub2txt(file_path)
         if not os.path.exists('Working_files'):
             os.makedirs('Working_files')
         file_path = os.path.join('Working_files', 'Book.txt')
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(content)
-    elif not file_path.endswith('.txt'):
-        messagebox.showerror("Error", "Selected file is not a TXT or EPUB file.")
+    elif not file_path.lower().endswith('.txt'):
+        messagebox.showerror("Error", "Selected file format is not supported or Calibre is not installed.")
         return
 
     # Now process the TXT file with BookNLP
