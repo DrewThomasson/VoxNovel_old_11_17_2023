@@ -17,41 +17,74 @@ import nltk
 from nltk.tokenize import sent_tokenize
 nltk.download('punkt')
 
-# Load CSV data
 data = pd.read_csv("book.csv")
+voice_actors = [va for va in os.listdir("tortoise/voices/") if va != "cond_latent_example"]
+male_voice_actors = [va for va in voice_actors if va.endswith(".M")]
+female_voice_actors = [va for va in voice_actors if va.endswith(".F")]
+other_voice_actors = [va for va in voice_actors if not va.endswith((".M", ".F"))]
 
-# Get list of available voice actors
-voice_actors = os.listdir("tortoise/voices/")
-
-# Main app
 class App:
     def __init__(self, root):
         self.root = root
         self.root.title("Voice Selector")
         self.speaker_voice_map = {}
 
-        # Dropdown for each speaker in CSV
+        # Outer Frame that holds everything
+        outer_frame = ttk.Frame(root)
+        outer_frame.pack(fill=tk.BOTH, expand=True)
+
+        # Scrollable Frame for Speakers
+        self.canvas = tk.Canvas(outer_frame)
+        self.canvas.grid(row=0, column=0, sticky="nsew")
+
+        scrollbar = ttk.Scrollbar(outer_frame, orient="vertical", command=self.canvas.yview)
+        scrollbar.grid(row=0, column=1, sticky="ns")
+
+        self.canvas.configure(yscrollcommand=scrollbar.set)
+
+        outer_frame.grid_rowconfigure(0, weight=1)
+        outer_frame.grid_columnconfigure(0, weight=1)
+
+        self.frame = ttk.Frame(self.canvas)
+        self.canvas.create_window((0, 0), window=self.frame, anchor="nw")
+        self.frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+
+        # Create widgets for speakers in the scrollable frame
         for idx, speaker in enumerate(data['Speaker'].unique()):
-            tk.Label(root, text=speaker).grid(row=idx, column=0)
-            combo = ttk.Combobox(root, values=voice_actors)
-            
-            # Set random voice
-            random_voice = random.choice(voice_actors)
-            combo.set(random_voice) 
-            
+            tk.Label(self.frame, text=speaker).grid(row=idx, column=0)
+            combo = ttk.Combobox(self.frame, values=voice_actors)
+            random_voice = self.get_random_voice_for_speaker(speaker)
+            combo.set(random_voice)
             combo.grid(row=idx, column=1)
             self.speaker_voice_map[speaker] = combo
+            tk.Button(self.frame, text="Preview", command=lambda speaker=speaker: self.preview_voice(speaker)).grid(row=idx, column=2)
 
-            # Add a preview button for each character
-            tk.Button(root, text="Preview", command=lambda speaker=speaker: self.preview_voice(speaker)).grid(row=idx, column=2)
+        # Non-scrollable frame for buttons and progress bar
+        button_frame = ttk.Frame(outer_frame)
+        button_frame.grid(row=1, column=0, columnspan=2, sticky="nsew")
 
-        # Buttons to add new voice and generate audio
-        tk.Button(root, text="Add New Voice", command=self.add_new_voice).grid(row=idx+1, column=0)
-        tk.Button(root, text="Generate Audio", command=self.generate_audio).grid(row=idx+1, column=1)
+        tk.Button(button_frame, text="Add New Voice", command=self.add_new_voice).grid(row=0, column=0)
+        tk.Button(button_frame, text="Generate Audio", command=self.generate_audio).grid(row=0, column=1)
+        self.progress = ttk.Progressbar(button_frame, orient="horizontal", length=200, mode="determinate")
+        self.progress.grid(row=1, column=0, columnspan=2)
 
-        # Progress bar setup
-        self.progress = ttk.Progressbar(root, orient="horizontal", length=200, mode="determinate")
-        self.progress.grid(row=idx+2, column=0, columnspan=3)
+    def get_random_voice_for_speaker(self, speaker):
+        selected_voice_actors = voice_actors  # default to all voice actors
+
+        if speaker.endswith(".M") and male_voice_actors:    
+            selected_voice_actors = male_voice_actors
+        elif speaker.endswith(".F") and female_voice_actors:
+            selected_voice_actors = female_voice_actors
+
+        if not selected_voice_actors:  # If list is empty, default to all voice actors
+            selected_voice_actors = voice_actors
+
+        return random.choice(selected_voice_actors)
+
+
+    def ensure_output_folder(self):
+        if not os.path.exists("generated_audio_clips"):
+            os.mkdir("generated_audio_clips")
 
     def add_new_voice(self):
         folder_name = askstring("New Voice", "Enter name for the new voice:")
@@ -59,55 +92,62 @@ class App:
             new_folder_path = os.path.join("tortoise/voices/", folder_name)
             os.mkdir(new_folder_path)
             file_path = filedialog.askopenfilename(filetypes=[("MP3 Files", "*.mp3"), ("WAV Files", "*.wav")])
-
             if file_path:
                 shutil.copy(file_path, new_folder_path)
-                
-                # Refresh the voice_actors list
                 global voice_actors
-                voice_actors = os.listdir("tortoise/voices/")
-                
-                # Update the dropdowns
+                voice_actors = [va for va in os.listdir("tortoise/voices/") if va != "cond_latent_example"]
                 for combo in self.speaker_voice_map.values():
                     combo['values'] = voice_actors
 
+    def split_long_string(self, text, limit=250):
+        if len(text) <= limit:
+            return [text]
+        
+        # Split by commas
+        parts = text.split(',')
+        new_parts = []
+        
+        for part in parts:
+            while len(part) > limit:
+                # Split at the last space before the limit
+                break_point = part.rfind(' ', 0, limit)
+                if break_point == -1:  # If no space found, split at the limit
+                    break_point = limit
+                new_parts.append(part[:break_point].strip())
+                part = part[break_point:].strip()
+            new_parts.append(part)
+        
+        return new_parts
+
     def generate_audio(self):
+        self.ensure_output_folder()
         total_rows = len(data)
         tts = TextToSpeech()
-    
         for index, row in data.iterrows():
             speaker = row['Speaker']
             text = row['Text']
-            print(f"text : {text}")
             voice_actor = self.speaker_voice_map[speaker].get()
-        
-            # Split text into sentences
             sentences = sent_tokenize(text)
-        
-            # List to store audio tensors for each sentence
+            
             audio_tensors = []
-        
             for sentence in sentences:
-                print(f"sentence : {sentence}")
-                voice_samples, conditioning_latents = load_voice(voice_actor)
-                gen = tts.tts_with_preset(sentence, voice_samples=voice_samples, conditioning_latents=conditioning_latents, preset="ultra_fast")
-                audio_tensors.append(gen.squeeze(0).cpu())
-
-            # Concatenate tensors along time axis and save
-            combined_audio = torch.cat(audio_tensors, dim=1)  # Concatenate along time axis
-            torchaudio.save(f'audio_{index}.wav', combined_audio, 24000)
-
-            # Update progress bar
+                fragments = self.split_long_string(sentence)
+                for fragment in fragments:
+                    print(fragment)
+                    voice_samples, conditioning_latents = load_voice(voice_actor)
+                    gen = tts.tts_with_preset(fragment, voice_samples=voice_samples, conditioning_latents=conditioning_latents, preset="ultra_fast")
+                    audio_tensors.append(gen.squeeze(0).cpu())
+            
+            combined_audio = torch.cat(audio_tensors, dim=1)
+            torchaudio.save(os.path.join("generated_audio_clips", f'audio_{index}.wav'), combined_audio, 24000)
             progress_percentage = (index + 1) / total_rows * 100
             self.progress['value'] = progress_percentage
             self.root.update_idletasks()
-
 
     def preview_voice(self, speaker):
         voice_actor = self.speaker_voice_map[speaker].get()
         voice_folder = os.path.join("tortoise/voices/", voice_actor)
         audio_samples = [f for f in os.listdir(voice_folder) if f.endswith(('.mp3', '.wav'))]
-        
         if audio_samples:
             sample_path = os.path.join(voice_folder, audio_samples[0])
             subprocess.Popen(["xdg-open", sample_path])
