@@ -460,7 +460,7 @@ import nltk
 from nltk.tokenize import sent_tokenize
 nltk.download('punkt')
 
-data = pd.read_csv("book.csv")
+data = pd.read_csv("Working_files/Book/book.csv")
 voice_actors = [va for va in os.listdir("tortoise/voices/") if va != "cond_latent_example"]
 male_voice_actors = [va for va in voice_actors if va.endswith(".M")]
 female_voice_actors = [va for va in voice_actors if va.endswith(".F")]
@@ -581,4 +581,3 @@ def combine_audio_files(silence_duration_ms):
 
 if __name__ == "__main__":
     combine_audio_files(SILENCE_DURATION_MS)
-
