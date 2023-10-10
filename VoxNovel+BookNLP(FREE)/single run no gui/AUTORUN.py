@@ -477,7 +477,7 @@ def get_random_voice_for_speaker(speaker):
 
     if not selected_voice_actors:  # If list is empty, default to all voice actors
         selected_voice_actors = voice_actors
-
+        
     return random.choice(selected_voice_actors)
 
 def ensure_output_folder():
@@ -510,7 +510,8 @@ def generate_audio():
     total_rows = len(data)
     tts = TextToSpeech()
 
-    speaker_voice_map = {}
+    speaker_voice_map = {"Narrator": "train_atkins.F", "Soren.M": "Tom.M"}
+    print(speaker_voice_map)
     for speaker in data['Speaker'].unique():
         random_voice = get_random_voice_for_speaker(speaker)
         speaker_voice_map[speaker] = random_voice
@@ -584,3 +585,24 @@ def combine_audio_files(silence_duration_ms):
 
 if __name__ == "__main__":
     combine_audio_files(SILENCE_DURATION_MS)
+
+
+
+
+
+
+
+
+
+from moviepy.editor import *
+
+def convert_wav_to_mp4(wav_filename, mp4_filename):
+    audio = AudioFileClip(wav_filename)
+    audio.write_audiofile(mp4_filename, codec='aac')
+
+if __name__ == "__main__":
+    wav_filename = "Final_combined_output_audio/combined_audio.wav"
+    mp4_filename = "Final_combined_output_audio/combined_audio.mp4"
+
+    convert_wav_to_mp4(wav_filename, mp4_filename)
+    print(f"{wav_filename} has been converted to {mp4_filename}.")
