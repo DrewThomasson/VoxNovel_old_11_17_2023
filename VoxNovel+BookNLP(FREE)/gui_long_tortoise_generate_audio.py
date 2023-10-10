@@ -16,20 +16,12 @@ from tortoise.utils.audio import load_audio, load_voice, load_voices
 import nltk
 from nltk.tokenize import sent_tokenize
 nltk.download('punkt')
-import tkinter as tk
-from tkinter import ttk
-from tkinter import filedialog
-from tkinter.simpledialog import askstring
-import os
-import pandas as pd
-import random
-import shutil
-import subprocess
-
-# Your other imports remain here
 
 data = pd.read_csv("book.csv")
-voice_actors = os.listdir("voices/")
+voice_actors = [va for va in os.listdir("tortoise/voices/") if va != "cond_latent_example"]
+male_voice_actors = [va for va in voice_actors if va.endswith(".M")]
+female_voice_actors = [va for va in voice_actors if va.endswith(".F")]
+other_voice_actors = [va for va in voice_actors if not va.endswith((".M", ".F"))]
 
 class App:
     def __init__(self, root):
@@ -61,7 +53,7 @@ class App:
         for idx, speaker in enumerate(data['Speaker'].unique()):
             tk.Label(self.frame, text=speaker).grid(row=idx, column=0)
             combo = ttk.Combobox(self.frame, values=voice_actors)
-            random_voice = random.choice(voice_actors)
+            random_voice = self.get_random_voice_for_speaker(speaker)
             combo.set(random_voice)
             combo.grid(row=idx, column=1)
             self.speaker_voice_map[speaker] = combo
@@ -76,17 +68,34 @@ class App:
         self.progress = ttk.Progressbar(button_frame, orient="horizontal", length=200, mode="determinate")
         self.progress.grid(row=1, column=0, columnspan=2)
 
+    def get_random_voice_for_speaker(self, speaker):
+        selected_voice_actors = voice_actors  # default to all voice actors
+
+        if speaker.endswith(".M") and male_voice_actors:    
+            selected_voice_actors = male_voice_actors
+        elif speaker.endswith(".F") and female_voice_actors:
+            selected_voice_actors = female_voice_actors
+
+        if not selected_voice_actors:  # If list is empty, default to all voice actors
+            selected_voice_actors = voice_actors
+
+        return random.choice(selected_voice_actors)
+
+
+    def ensure_output_folder(self):
+        if not os.path.exists("generated_audio_clips"):
+            os.mkdir("generated_audio_clips")
 
     def add_new_voice(self):
         folder_name = askstring("New Voice", "Enter name for the new voice:")
         if folder_name:
-            new_folder_path = os.path.join("voices/", folder_name)
+            new_folder_path = os.path.join("tortoise/voices/", folder_name)
             os.mkdir(new_folder_path)
             file_path = filedialog.askopenfilename(filetypes=[("MP3 Files", "*.mp3"), ("WAV Files", "*.wav")])
             if file_path:
                 shutil.copy(file_path, new_folder_path)
                 global voice_actors
-                voice_actors = os.listdir("voices/")
+                voice_actors = [va for va in os.listdir("tortoise/voices/") if va != "cond_latent_example"]
                 for combo in self.speaker_voice_map.values():
                     combo['values'] = voice_actors
 
@@ -111,6 +120,7 @@ class App:
         return new_parts
 
     def generate_audio(self):
+        self.ensure_output_folder()
         total_rows = len(data)
         tts = TextToSpeech()
         for index, row in data.iterrows():
@@ -129,15 +139,14 @@ class App:
                     audio_tensors.append(gen.squeeze(0).cpu())
             
             combined_audio = torch.cat(audio_tensors, dim=1)
-            torchaudio.save(f'audio_{index}.wav', combined_audio, 24000)
+            torchaudio.save(os.path.join("generated_audio_clips", f'audio_{index}.wav'), combined_audio, 24000)
             progress_percentage = (index + 1) / total_rows * 100
             self.progress['value'] = progress_percentage
             self.root.update_idletasks()
 
-
     def preview_voice(self, speaker):
         voice_actor = self.speaker_voice_map[speaker].get()
-        voice_folder = os.path.join("voices/", voice_actor)
+        voice_folder = os.path.join("tortoise/voices/", voice_actor)
         audio_samples = [f for f in os.listdir(voice_folder) if f.endswith(('.mp3', '.wav'))]
         if audio_samples:
             sample_path = os.path.join(voice_folder, audio_samples[0])
@@ -146,4 +155,3 @@ class App:
 root = tk.Tk()
 app = App(root)
 root.mainloop()
-
