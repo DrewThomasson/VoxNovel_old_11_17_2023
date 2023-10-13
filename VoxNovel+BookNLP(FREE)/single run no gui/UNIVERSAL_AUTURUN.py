@@ -116,8 +116,11 @@ def process_files(quotes_file, tokens_file):
                                     (df_tokens['token_ID_within_document'] < start_id)]
         
         # Build the word chunk
-        words_chunk = ' '.join([token_row['word'] for index, token_row in filtered_tokens.iterrows()])
-        words_chunk = words_chunk.replace(" n't", "n't").replace(" n’", "n’").replace("( ", "(").replace(" ,", ",").replace("gon na", "gonna")
+        #words_chunk = ' '.join([token_row['word'] for index, token_row in filtered_tokens.iterrows()])
+        words_chunk = ' '.join([str(token_row['word']) for index, token_row in filtered_tokens.iterrows()])
+
+
+        words_chunk = words_chunk.replace(" n't", "n't").replace(" n’", "n’").replace("( ", "(").replace(" ,", ",").replace("gon na", "gonna").replace(" n’t", "n’t")
         words_chunk = re.sub(r' (?=[^a-zA-Z0-9\s])', '', words_chunk)
         
         # Append data to nonquotes_data if words_chunk is not empty
@@ -299,8 +302,9 @@ def process_files(quotes_file, tokens_file):
                                     (df_tokens['token_ID_within_document'] < start_id)]
         
         # Build the word chunk
-        words_chunk = ' '.join([token_row['word'] for index, token_row in filtered_tokens.iterrows()])
-        words_chunk = words_chunk.replace(" n't", "n't").replace(" n’", "n’")
+        #words_chunk = ' '.join([token_row['word'] for index, token_row in filtered_tokens.iterrows()])
+        words_chunk = ' '.join([str(token_row['word']) for index, token_row in filtered_tokens.iterrows()])
+        words_chunk = words_chunk.replace(" n't", "n't").replace(" n’", "n’").replace(" ’", "’").replace(" ,", ",").replace(" .", ".").replace(" n’t", "n’t")
         words_chunk = re.sub(r' (?=[^a-zA-Z0-9\s])', '', words_chunk)
         
         # Append data to nonquotes_data if words_chunk is not empty
@@ -362,6 +366,52 @@ sorted_df = combined_df.sort_values(by="Start Location")
 
 # Save to 'book.csv'
 sorted_df.to_csv("Working_files/Book/book.csv", index=False)
+
+
+
+
+
+
+#this is a clean up script to try to clean up the quotes.csv and non_quotes.csv files of any types formed by booknlp
+import pandas as pd
+import os
+import re
+
+def process_text(text):
+    # Apply the rule to remove spaces before punctuation and other non-alphanumeric characters
+    text = re.sub(r' (?=[^a-zA-Z0-9\s])', '', text)
+    # Replace " n’t" with "n’t"
+    text = text.replace(" n’t", "n’t")
+    return text
+
+def process_file(filename):
+    # Load the file
+    df = pd.read_csv(filename)
+
+    # Check if the "Text" column exists
+    if "Text" in df.columns:
+        # Apply the rules to the "Text" column
+        df['Text'] = df['Text'].apply(lambda x: process_text(str(x)))
+        
+        # Save the processed data back to the file
+        df.to_csv(filename, index=False)
+        print(f"Processed and saved {filename}")
+    else:
+        print(f"Column 'Text' not found in {filename}")
+
+def main():
+    folder_path = "Working_files/Book/"
+    files = ["non_quotes.csv", "quotes.csv"]
+
+    for filename in files:
+        full_path = os.path.join(folder_path, filename)
+        if os.path.exists(full_path):
+            process_file(full_path)
+        else:
+            print(f"File {filename} not found in {folder_path}")
+
+if __name__ == "__main__":
+    main()
 
 
 
