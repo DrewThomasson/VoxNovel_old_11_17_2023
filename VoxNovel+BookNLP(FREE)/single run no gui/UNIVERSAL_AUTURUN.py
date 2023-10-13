@@ -598,7 +598,7 @@ if __name__ == "__main__":
 
 
 
-
+#this converts the wav file to mp4 so it takes up less storage 
 
 from moviepy.editor import *
 
