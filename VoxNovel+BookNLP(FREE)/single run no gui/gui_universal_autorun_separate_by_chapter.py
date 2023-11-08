@@ -637,7 +637,7 @@ def generate_audio():
         
         combined_audio = torch.cat(audio_tensors, dim=1)
         torchaudio.save(os.path.join("Working_files/generated_audio_clips", f'audio_{index}_{chapter_num}.wav'), combined_audio, 24000)
-    
+    root.destroy()
 
 # Function to update the progress bar
 def update_progress(index, total):
