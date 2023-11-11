@@ -11,6 +11,7 @@ Run in this order:
 7. `pip install -r requirements.txt`
 
 If on mac 
+
 7.`pip install -r MAC-requirements.txt`
 
 # To Run the program
