@@ -927,7 +927,7 @@ progress_label.pack()
 text_display_frame = ttk.Frame(root)
 text_display_frame.pack(expand=True, fill='both')
 
-text_display = scrolledtext.ScrolledText(text_display_frame)
+text_display = scrolledtext.ScrolledText(text_display_frame, height=10)
 text_display.pack(expand=True, fill='both')
 
 # Load and display the book content with colored speakers
@@ -957,12 +957,17 @@ def load_book():
         text_display.tag_configure(speaker, foreground=speaker_color)
 
 
-load_book_button = ttk.Button(root, text="Load Book", command=load_book)
-load_book_button.pack(pady=5)
+# Create a frame to contain the buttons
+buttons_frame = ttk.Frame(root)
+buttons_frame.pack(pady=10)
 
-# Audio Generation Section
-generate_button = ttk.Button(root, text="Generate Audio", command=lambda: threading.Thread(target=generate_audio).start())
-generate_button.pack(pady=5)
+# Load Book Button
+load_book_button = ttk.Button(buttons_frame, text="Load Book", command=load_book)
+load_book_button.pack(side=tk.LEFT, padx=5)
+
+# Generate Audio Button
+generate_button = ttk.Button(buttons_frame, text="Generate Audio", command=lambda: threading.Thread(target=generate_audio).start())
+generate_button.pack(side=tk.LEFT, padx=5)
 
 root.mainloop()
 
