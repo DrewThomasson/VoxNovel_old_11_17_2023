@@ -744,6 +744,50 @@ def generate_audio():
 
 
 
+# Nord Theme colors
+nord_bg = "#2E3440"  # Polar Night
+nord_fg = "#D8DEE9"  # Snow Storm
+nord_text = "#ECEFF4"  # Frost
+nord_buttons = "#4C566A"  # Darker elements of Polar Night
+nord_scrollbar_bg = "#434C5E"  # Polar Night scrollbar background
+nord_scrollbar_fg = "#E5E9F0"  # Polar Night scrollbar foreground
+
+# Default Theme colors (just as an example, you can choose your own)
+default_bg = "#FFFFFF"
+default_fg = "#000000"
+default_text = "#000000"
+default_buttons = "#E0E0E0"
+default_scrollbar_bg = "#C0C0C0"
+default_scrollbar_fg = "#808080"
+
+# Function to toggle the Nord theme
+def toggle_nord_theme():
+    global nord_mode
+    nord_mode = not nord_mode  # Toggle the mode
+
+    # Set the colors based on the current mode
+    bg_color = nord_bg if nord_mode else default_bg
+    fg_color = nord_fg if nord_mode else default_fg
+    text_color = nord_text if nord_mode else default_text
+    button_color = nord_buttons if nord_mode else default_buttons
+    scrollbar_bg = nord_scrollbar_bg if nord_mode else default_scrollbar_bg
+    scrollbar_fg = nord_scrollbar_fg if nord_mode else default_scrollbar_fg
+
+    # Update the colors of the widgets
+    root.configure(bg=bg_color)
+    text_display.configure(bg=bg_color, fg=text_color)
+    progress_bar.configure(bg=button_color)
+    # ... Update other widgets similarly ...
+    # Update comboboxes, labels, buttons, scrollbar, etc.
+
+# Initialize Nord mode to False (start with default theme)
+nord_mode = False
+
+# Create the Nord theme toggle button
+nord_theme_button = ttk.Button(root, text="Toggle Nord Theme", command=toggle_nord_theme)
+nord_theme_button.pack(pady=5)
+
+
 
 
 from functools import partial
@@ -988,7 +1032,6 @@ def remove_wav_files(folder):
 
 # Run the function
 remove_wav_files(folder_path)
-
 
 
 
