@@ -522,6 +522,7 @@ female_voice_actors = [va for va in voice_actors if va.endswith(".F")]
 
 # Dictionary to hold each character's selected language
 character_languages = {}
+selected_tts_model = 'tts_models/multilingual/multi-dataset/xtts_v2'
 
 
 # Map for speaker to voice actor
@@ -668,6 +669,31 @@ def wipe_folder(directory_path):
                 print(f"Failed to delete {file_path}. Reason: {e}")
                 
 
+# List of available TTS models
+
+tts_models = [
+    'tts_models/multilingual/multi-dataset/xtts_v2',
+    # Add all other models here...
+]
+tts_models = TTS().list_models()
+
+# Function to update the selected TTS model
+def update_tts_model(event):
+    global selected_tts_model
+    selected_tts_model = tts_model_combobox.get()
+    print(f"Selected TTS model: {selected_tts_model}")
+
+# Frame for TTS Model Selection Dropdown
+tts_model_selection_frame = ttk.LabelFrame(root, text="Select TTS Model")
+tts_model_selection_frame.pack(fill="x", expand="yes", padx=10, pady=10)
+
+# Create a dropdown for TTS model selection
+tts_model_var = tk.StringVar()
+tts_model_combobox = ttk.Combobox(tts_model_selection_frame, textvariable=tts_model_var, state="readonly")
+tts_model_combobox['values'] = tts_models
+tts_model_combobox.set(selected_tts_model)  # Set default value
+tts_model_combobox.bind("<<ComboboxSelected>>", update_tts_model)
+tts_model_combobox.pack(side="top", fill="x", expand="yes")
 
 
 
@@ -705,8 +731,11 @@ def generate_audio():
     #print(TTS().list_models())
 
     # Initialize the TTS model and set the device
-    tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
-
+    #tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
+    # Update the model initialization to use the selected model
+    tts = TTS(selected_tts_model, progress_bar=True).to(device)
+    
+    
     random.seed(int(time.time()))
     ensure_output_folder()
     total_rows = len(data)
@@ -731,10 +760,45 @@ def generate_audio():
         for sentence in sentences:
             fragments = split_long_string(sentence)
             for fragment in fragments:
+                # Check if the selected model is multilingual
+                if 'multilingual' in selected_tts_model:
+                    language_code = character_languages.get(speaker, current_language)
+                else:
+                    language_code = None  # No language specification for non-multilingual models
+
                 print(f"Voice actor: {voice_actor}, {current_language}")
                 temp_count = temp_count +1
-                tts.tts_to_file(text=fragment,file_path=f"Working_files/temp/{temp_count}.wav",speaker_wav=list_reference_files(voice_actor),language=language_code)
-                print(f"Voice actor: {voice_actor}, {current_language}")
+                # Use the model and language code to generate the audio
+                #tts = TTS(model_name="tts_models/en/ek1/tacotron2", progress_bar=False).to(device)
+                #tts.tts_to_file(fragment, speaker_wav=list_reference_files(voice_actor), progress_bar=True, file_path=f"Working_files/temp/{temp_count}.wav")
+                
+                # If the model contains both "multilingual" and "multi-dataset"
+                if "multilingual" in selected_tts_model and "multi-dataset" in selected_tts_model:
+                	if "bark" in selected_tts_model:
+                		print(f"{selected_tts_model} is bark so multilingual but has no language code")
+                		tts.tts_to_file(text=fragment, file_path=f"Working_files/temp/{temp_count}.wav",speaker_wav=list_reference_files(voice_actor))
+                	else:
+                		print(f"{selected_tts_model} is multi-dataset and multilingual")
+                		tts.tts_to_file(text=fragment, file_path=f"Working_files/temp/{temp_count}.wav",speaker_wav=list_reference_files(voice_actor), language=language_code)
+
+                # If the model only contains "multilingual"
+                elif "multilingual" in selected_tts_model:
+                	print(f"{selected_tts_model} is multilingual")
+                	tts.tts_to_file(text=fragment, file_path=f"Working_files/temp/{temp_count}.wav",speaker_wav=list_reference_files(voice_actor), language=language_code)
+
+                # If the model only contains "multi-dataset"
+                elif "multi-dataset" in selected_tts_model:
+                	print(f"{selected_tts_model} is multi-dataset")
+                	tts.tts_to_file(text=fragment, file_path=f"Working_files/temp/{temp_count}.wav")
+
+                # If the model contains neither "multilingual" nor "multi-dataset"
+                else:
+                	print(f"{selected_tts_model} is neither multi-dataset nor multilingual")
+                	tts.tts_to_file(text=fragment,file_path=f"Working_files/temp/{temp_count}.wav")  # Assuming the tts_to_file function has default arguments for unspecified parameters
+
+                
+                
+                
         temp_input_directory = "Working_files/temp"  # Replace with the actual input directory path
         output_directory = "Working_files/generated_audio_clips"  # Replace with the desired output directory path
         combine_wav_files(temp_input_directory, output_directory, f"audio_{index}_{chapter_num}.wav")
@@ -742,50 +806,6 @@ def generate_audio():
     root.destroy()
 
 
-
-
-# Nord Theme colors
-nord_bg = "#2E3440"  # Polar Night
-nord_fg = "#D8DEE9"  # Snow Storm
-nord_text = "#ECEFF4"  # Frost
-nord_buttons = "#4C566A"  # Darker elements of Polar Night
-nord_scrollbar_bg = "#434C5E"  # Polar Night scrollbar background
-nord_scrollbar_fg = "#E5E9F0"  # Polar Night scrollbar foreground
-
-# Default Theme colors (just as an example, you can choose your own)
-default_bg = "#FFFFFF"
-default_fg = "#000000"
-default_text = "#000000"
-default_buttons = "#E0E0E0"
-default_scrollbar_bg = "#C0C0C0"
-default_scrollbar_fg = "#808080"
-
-# Function to toggle the Nord theme
-def toggle_nord_theme():
-    global nord_mode
-    nord_mode = not nord_mode  # Toggle the mode
-
-    # Set the colors based on the current mode
-    bg_color = nord_bg if nord_mode else default_bg
-    fg_color = nord_fg if nord_mode else default_fg
-    text_color = nord_text if nord_mode else default_text
-    button_color = nord_buttons if nord_mode else default_buttons
-    scrollbar_bg = nord_scrollbar_bg if nord_mode else default_scrollbar_bg
-    scrollbar_fg = nord_scrollbar_fg if nord_mode else default_scrollbar_fg
-
-    # Update the colors of the widgets
-    root.configure(bg=bg_color)
-    text_display.configure(bg=bg_color, fg=text_color)
-    progress_bar.configure(bg=button_color)
-    # ... Update other widgets similarly ...
-    # Update comboboxes, labels, buttons, scrollbar, etc.
-
-# Initialize Nord mode to False (start with default theme)
-nord_mode = False
-
-# Create the Nord theme toggle button
-nord_theme_button = ttk.Button(root, text="Toggle Nord Theme", command=toggle_nord_theme)
-nord_theme_button.pack(pady=5)
 
 
 
