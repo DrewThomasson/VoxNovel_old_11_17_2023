@@ -10,7 +10,7 @@ Run in this order:
 6. `pip install booknlp`
 7. `pip install -r requirements.txt`
 
-If on mac 
+If on intel mac 
 
 7.`pip install -r MAC-requirements.txt`
 
