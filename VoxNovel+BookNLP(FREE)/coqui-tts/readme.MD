@@ -23,7 +23,6 @@ If on intel mac
 7.`pip install -r MAC-requirements.txt`
 
 If on Windows
-# To Run the program
 install calibre for windows
 1. `conda create --name VoxNovel python=3.10`
 2. `conda activate VoxNovel`
@@ -33,6 +32,7 @@ install calibre for windows
 6. `pip install booknlp`
 7.`pip install -r Windows-requirements.txt`
 ```bash
+# To Run the program
 python gui_run.py
 
 
