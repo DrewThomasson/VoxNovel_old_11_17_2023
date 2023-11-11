@@ -33,6 +33,7 @@ install calibre for windows
 4. `cd VoxNovel/VoxNovel+BookNLP\(FREE\)/coqui-tts/`
 5. `pip install tts`
 6. `pip install booknlp`
+
 7.`pip install -r Windows-requirements.txt`
 ```bash
 # To Run the program
