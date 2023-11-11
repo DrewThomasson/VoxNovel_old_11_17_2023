@@ -10,6 +10,9 @@ Run in this order:
 6. `pip install booknlp`
 7. `pip install -r requirements.txt`
 
+#if on mac 
+7.`pip install -r MAC-requirements.txt`
+
 # To Run the program
 
 ```bash
