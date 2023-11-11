@@ -5,7 +5,7 @@ Run in this order:
 1. `conda create --name VoxNovel python=3.10`
 2. `conda activate VoxNovel`
 3. `git clone https://github.com/DrewThomasson/VoxNovel.git`
-4. `cd VoxNovel/`
+4. `cd VoxNovel/NovNovel+BookNLP(FREE)/coqui-tts/`
 5. `pip install tts`
 6. `pip install booknlp`
 7. `pip install -r requirements.txt`
