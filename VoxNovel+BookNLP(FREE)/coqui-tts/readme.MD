@@ -3,6 +3,7 @@
 Run in this order:
 
 if on Linux
+
 `sudo apt-get install calibre`
 1. `conda create --name VoxNovel python=3.10`
 2. `conda activate VoxNovel`
@@ -13,6 +14,7 @@ if on Linux
 7. `pip install -r requirements.txt`
 
 If on intel mac 
+
 `brew install calibre`
 1. `conda create --name VoxNovel python=3.10`
 2. `conda activate VoxNovel`
