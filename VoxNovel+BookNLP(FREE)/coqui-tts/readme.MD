@@ -1,18 +1,25 @@
-**SetUp install**
-run in this order:
+# SetUp install
 
-conda create --name VoxNovel python=3.10
-conda activate VoxNovel
-git clone https://github.com/DrewThomasson/VoxNovel.git
-cd VoxNovel/
-pip install tts
-pip install booknlp
-pip install -r requirements.txt
+Run in this order:
+
+1. `conda create --name VoxNovel python=3.10`
+2. `conda activate VoxNovel`
+3. `git clone https://github.com/DrewThomasson/VoxNovel.git`
+4. `cd VoxNovel/`
+5. `pip install tts`
+6. `pip install booknlp`
+7. `pip install -r requirements.txt`
+
+# To Run the program
+
+```bash
+python gui_run.py
+
 
 **To Run the program**
 python gui_run.py
 
-**To run the version here all you do is select the book and nothing else**
+**To run the auto version here all you do is select the book and nothing else**
 
 python auto_noGui_run.py
 
